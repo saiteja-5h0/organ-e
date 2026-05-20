@@ -1,0 +1,93 @@
+:root {
+  --bg: #fff5f5;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --primary: #dc2626;
+  --accent: #06152b;
+  --success: #15803d;
+  --info: #0369a1;
+  --glass-border: rgba(255,255,255,0.3);
+  --card-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* Button system */
+.btn {
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:focus {
+  outline: 3px solid rgba(99,102,241,0.12);
+  outline-offset: 2px;
+}
+
+.btn:hover { transform: translateY(-2px); }
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 6px 18px rgba(220,38,38,0.12);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(0,0,0,0.08);
+  color: var(--accent);
+}
+
+.muted { color: var(--muted); }
+
+.container { max-width: 1200px; margin: auto; padding: 20px; }
+
+/* Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  border-bottom: 2px solid var(--primary);
+  background: var(--surface);
+}
+.navbar .logo { font-weight: 700; font-size: 20px; }
+.navbar .subtext { font-size: 12px; color: var(--primary); }
+.nav-links { display: flex; gap: 20px; align-items: center; }
+.nav-links a { color: var(--accent); font-weight: 600; }
+
+/* Progress */
+.progress-container { background: #e5e7eb; border-radius: 10px; height: 10px; margin: 10px 0; overflow: hidden; }
+.progress-bar { height: 100%; background: #10b981; border-radius: 10px; transition: width 0.6s ease; }
+
+/* Footer */
+.site-footer { background: #1f2937; color: white; margin-top: 60px; padding-top: 30px; }
+.site-footer .footer-container { display: flex; justify-content: space-between; gap: 40px; max-width: 1200px; margin: auto; padding: 0 20px; flex-wrap: wrap; }
+.footer-text { color: #fca5a5; }
+.footer-small { font-size: 13px; color: #d1d5db; line-height: 1.6; }
+.footer-bottom { border-top: 1px solid #374151; margin-top: 30px; padding: 16px; text-align: center; font-size: 13px; color: #9ca3af; }
