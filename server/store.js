@@ -126,4 +126,15 @@ async function addDonation(id, amount) {
   return data.fundraisings[idx];
 }
 
-module.exports = { load, save, getRequests, addRequest, updateRequest, deleteRequest, getFundraisings, addFundraising, addDonation };
+module.exports = {
+  load,
+  save,
+  getRequests,
+  queryRequests,
+  addRequest,
+  updateRequest,
+  deleteRequest,
+  getFundraisings,
+  addFundraising,
+  addDonation,
+};

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 5001;
+const host = process.env.HOST || '127.0.0.1';
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -81,6 +82,6 @@ app.post('/api/fundraising/:id/donate', async (req, res) => {
   res.json(updated);
 });
 
-app.listen(port, () => {
-  console.log(`Organ-E API listening on port ${port}`);
+app.listen(port, host, () => {
+  console.log(`Organ-E API listening on http://${host}:${port}`);
 });
