@@ -1,21 +1,22 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DashboardStatCard from "../components/DashboardStatCard";
 
 function DoctorDashboard() {
-  const recentRequests = [
-    {
-      organ: "Kidney",
-      patient: "Patient ID #1023",
-      urgency: "Critical",
-      status: "Pending",
-    },
-    {
-      organ: "Liver",
-      patient: "Patient ID #2041",
-      urgency: "High",
-      status: "Matched",
-    },
-  ];
+  const [recentRequests, setRecentRequests] = useState([]);
+  const [stats, setStats] = useState({ active: 0, completed: 12, pending: 2 });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch('/api/requests?limit=5')
+      .then((r) => r.json())
+      .then((data) => {
+        setRecentRequests(data.items || []);
+        setStats((s) => ({ ...s, active: data.total || 0 }));
+      })
+      .catch((err) => console.error("Failed to load dashboard data", err))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
     <div className="container">
@@ -32,17 +33,17 @@ function DoctorDashboard() {
       <div style={styles.stats}>
         <DashboardStatCard
           title="Active Requests"
-          value="3"
+          value={stats.active}
           color="#dc2626"
         />
         <DashboardStatCard
           title="Completed Transplants"
-          value="12"
+          value={stats.completed}
           color="#16a34a"
         />
         <DashboardStatCard
           title="Pending Verifications"
-          value="2"
+          value={stats.pending}
           color="#f59e0b"
         />
       </div>
@@ -55,24 +56,37 @@ function DoctorDashboard() {
       {/* Recent Requests */}
       <h3 style={{ marginTop: 30 }}>Recent Organ Requests</h3>
 
-      {recentRequests.map((r, i) => (
-        <div key={i} style={styles.requestCard}>
-          <b>{r.organ} Transplant</b>
-          <p>{r.patient}</p>
-          <span style={styles.tag}>{r.urgency}</span>
-          <span style={styles.status}>{r.status}</span>
-        </div>
-      ))}
+      {loading ? (
+        <p>Loading...</p>
+      ) : recentRequests.length ? (
+        recentRequests.map((r, i) => (
+          <div key={i} style={styles.requestCard}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <b>{r.organ} Transplant</b>
+                <p>{r.hospital} - {r.location}</p>
+                <p style={{ fontSize: 12, color: '#666' }}>Blood Group: {r.blood}</p>
+              </div>
+              <div style={{ textAlign: 'right' }}>
+                <span style={styles.tag}>{r.urgency}</span>
+                <span style={styles.status}>Pending</span>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>No recent requests</p>
+      )}
     </div>
   );
 }
 
 const styles = {
   profile: {
-  padding: 20,
-  borderRadius: 14,
-  marginBottom: 20,
-},
+    padding: 20,
+    borderRadius: 14,
+    marginBottom: 20,
+  },
   verified: {
     background: "#dcfce7",
     color: "#166534",
@@ -93,10 +107,12 @@ const styles = {
     fontWeight: "bold",
   },
   requestCard: {
-  padding: 16,
-  borderRadius: 12,
-  marginTop: 12,
-},
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 12,
+    background: 'rgba(255, 255, 255, 0.8)',
+    border: '1px solid #eee',
+  },
   tag: {
     background: "#fde68a",
     padding: "4px 10px",

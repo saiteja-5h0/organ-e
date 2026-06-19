@@ -1,0 +1,53 @@
+{
+  "requests": [
+    {
+      "id": 1,
+      "organ": "Kidney",
+      "urgency": "Critical",
+      "blood": "O+",
+      "location": "Miyapur, Hyderabad",
+      "hospital": "Care Hospital",
+      "time": "2 hours ago"
+    },
+    {
+      "id": 2,
+      "organ": "Liver",
+      "urgency": "High",
+      "blood": "A-",
+      "location": "Banjara Hills, Hyderabad",
+      "hospital": "Apollo Hospital",
+      "time": "5 hours ago"
+    },
+    {
+      "id": 3,
+      "organ": "Kidney",
+      "urgency": "Moderate",
+      "blood": "B+",
+      "location": "Secunderabad",
+      "hospital": "Yashoda Hospital",
+      "time": "1 day ago"
+    }
+  ],
+  "fundraisings": [
+    {
+      "id": 1,
+      "title": "Emergency Liver Transplant for Raju",
+      "hospital": "AIG Hospitals",
+      "goal": 2500000,
+      "raised": 1200000,
+      "daysLeft": 15,
+      "image": "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800",
+      "description": "Raju needs an urgent liver transplant after sudden failure."
+    },
+    {
+      "id": 2,
+      "title": "Help Baby Sia's Heart Surgery",
+      "hospital": "Rainbow Children's Hospital",
+      "goal": 800000,
+      "raised": 450000,
+      "daysLeft": 25,
+      "image": "https://images.unsplash.com/photo-1584515839997-64dfa428e97a?auto=format&fit=crop&q=80&w=800",
+      "description": "6-month-old Sia requires open heart surgery."
+    }
+  ]
+}

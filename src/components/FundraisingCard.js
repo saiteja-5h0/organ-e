@@ -1,10 +1,11 @@
 import React from "react";
 
 function FundraisingCard({ data, onDonate }) {
-  const percent = Math.min(
-    (data.raised / data.target) * 100,
-    100
-  );
+  const goal = data.target || data.goal || 1;
+  const raised = data.raised || 0;
+  const daysLeft = data.daysLeft || 0;
+
+  const percent = Math.min((raised / goal) * 100, 100);
 
   return (
     <div className="glass-card fade-in">
@@ -16,11 +17,11 @@ function FundraisingCard({ data, onDonate }) {
       </div>
 
       <p>
-        ₹{data.raised.toLocaleString()} raised of ₹
-        {data.target.toLocaleString()}
+        ₹{raised.toLocaleString()} raised of ₹
+        {goal.toLocaleString()}
       </p>
 
-      <p>⏳ {data.daysLeft} days left</p>
+      <p>⏳ {daysLeft} days left</p>
 
       <div style={styles.badges}>
         <span style={styles.badge}>Hospital Verified</span>
