@@ -17,12 +17,12 @@ function SupervisorDashboard({ user }) {
         setLoading(true);
         try {
             // Fetch all transfers related to supervisor hospital
-            const transRes = await fetch(`/api/supervisor/transfers?hospital=${encodeURIComponent(user)}`);
+            const transRes = await fetch(`/api/supervisor/transfers?hospital=${encodeURIComponent(user.hospital)}`);
             const transData = await transRes.json();
             setTransfers(transData);
 
             // Fetch local organs to check if we can fulfill incoming requests
-            const orgRes = await fetch(`/api/organs?hospital=${encodeURIComponent(user)}`);
+            const orgRes = await fetch(`/api/organs?hospital=${encodeURIComponent(user.hospital)}`);
             const orgData = await orgRes.json();
             setLocalOrgans(orgData.filter(o => o.status === "Available"));
         } catch (err) {
@@ -34,7 +34,7 @@ function SupervisorDashboard({ user }) {
 
     const handleCreateTransfer = useCallback(async (e) => {
         e.preventDefault();
-        if (targetHospital === user) {
+        if (targetHospital === user.hospital) {
             alert("Error: Destination hospital cannot match source hospital.");
             return;
         }
@@ -47,7 +47,7 @@ function SupervisorDashboard({ user }) {
                     organ_type: organType,
                     blood_group: bloodGroup,
                     from_hospital: targetHospital,      // requested from this target hospital
-                    to_hospital: user          // transferring to us
+                    to_hospital: user.hospital          // transferring to us
                 })
             });
 
@@ -92,8 +92,8 @@ function SupervisorDashboard({ user }) {
     // Filter incoming (requested FROM us) vs outgoing (requested BY us)
     // outgoing: transfers where we are to_hospital (i.e. we requested it to come to our hospital)
     // incoming: transfers where we are from_hospital (i.e. they requested us to send them an organ)
-    const outgoingTransfers = transfers.filter((t) => t.to_hospital === user);
-    const incomingTransfers = transfers.filter((t) => t.from_hospital === user);
+    const outgoingTransfers = transfers.filter((t) => t.to_hospital === user.hospital);
+    const incomingTransfers = transfers.filter((t) => t.from_hospital === user.hospital);
 
     return (
         <div style={styles.container}>
@@ -102,7 +102,7 @@ function SupervisorDashboard({ user }) {
                 <div>
                     <h2>📡 Supervisor regional network coordination grid</h2>
                     <p>
-                        Welcome, Coordinator <strong>{user.name}</strong> | Regional Operations, {user}
+                        Welcome, Coordinator <strong>{user.name}</strong> | Regional Operations, {user.hospital}
                     </p>
                     <span style={styles.badge}>Regional Supervisor (Grid Coordination)</span>
                 </div>
