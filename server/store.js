@@ -1,6 +1,7 @@
 const fs = require('fs').promises;
 const path = require('path');
 const { Pool } = require('pg');
+const { NETWORK_HOSPITALS, isOrganMatch, generateVerificationCode } = require('./utils');
 
 const FILE = path.join(__dirname, 'data.json');
 
@@ -37,12 +38,64 @@ async function load() {
     if (!data.fundraisings) data.fundraisings = [];
     if (!data.users) {
       data.users = [
+        // Care Hospital
         { id: 101, username: 'doctor1', password: 'password', role: 'doctor', name: 'Dr. Sai Teja', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
         { id: 102, username: 'admin1', password: 'password', role: 'admin', name: 'Admit Coord A', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
-        { id: 103, username: 'supervisor1', password: 'password', role: 'supervisor', name: 'Network Sup B', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' }
+        { id: 103, username: 'supervisor1', password: 'password', role: 'supervisor', name: 'Network Sup A1', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
+        { id: 107, username: 'doctor1b', password: 'password', role: 'doctor', name: 'Dr. Aarav Sharma', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
+        { id: 108, username: 'admin1b', password: 'password', role: 'admin', name: 'Admit Coord A2', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
+        { id: 109, username: 'supervisor1b', password: 'password', role: 'supervisor', name: 'Network Sup A2', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
+
+        // Apollo Hospital
+        { id: 104, username: 'doctor2', password: 'password', role: 'doctor', name: 'Dr. Priya Reddy', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+        { id: 105, username: 'admin2', password: 'password', role: 'admin', name: 'Admit Coord B', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+        { id: 106, username: 'supervisor2', password: 'password', role: 'supervisor', name: 'Network Sup B1', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+        { id: 110, username: 'doctor2b', password: 'password', role: 'doctor', name: 'Dr. Rakesh Sen', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+        { id: 111, username: 'admin2b', password: 'password', role: 'admin', name: 'Admit Coord B2', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+        { id: 112, username: 'supervisor2b', password: 'password', role: 'supervisor', name: 'Network Sup B2', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+
+        // Yashoda Hospital
+        { id: 113, username: 'doctor3', password: 'password', role: 'doctor', name: 'Dr. Vikram Seth', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+        { id: 114, username: 'doctor3b', password: 'password', role: 'doctor', name: 'Dr. Nisha Goel', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+        { id: 115, username: 'admin3', password: 'password', role: 'admin', name: 'Admit Coord C', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+        { id: 116, username: 'admin3b', password: 'password', role: 'admin', name: 'Admit Coord C2', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+        { id: 117, username: 'supervisor3', password: 'password', role: 'supervisor', name: 'Network Sup C1', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+        { id: 118, username: 'supervisor3b', password: 'password', role: 'supervisor', name: 'Network Sup C2', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+
+        // AIG Hospitals
+        { id: 119, username: 'doctor4', password: 'password', role: 'doctor', name: 'Dr. Mahesh Babu', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+        { id: 120, username: 'doctor4b', password: 'password', role: 'doctor', name: 'Dr. Kavya Krishnan', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+        { id: 121, username: 'admin4', password: 'password', role: 'admin', name: 'Admit Coord D', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+        { id: 122, username: 'admin4b', password: 'password', role: 'admin', name: 'Admit Coord D2', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+        { id: 123, username: 'supervisor4', password: 'password', role: 'supervisor', name: 'Network Sup D1', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+        { id: 124, username: 'supervisor4b', password: 'password', role: 'supervisor', name: 'Network Sup D2', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+
+        // Fortis Hospital
+        { id: 125, username: 'doctor5', password: 'password', role: 'doctor', name: 'Dr. Sameer Khan', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+        { id: 126, username: 'doctor5b', password: 'password', role: 'doctor', name: 'Dr. Ananya Roy', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+        { id: 127, username: 'admin5', password: 'password', role: 'admin', name: 'Admit Coord E', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+        { id: 128, username: 'admin5b', password: 'password', role: 'admin', name: 'Admit Coord E2', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+        { id: 129, username: 'supervisor5', password: 'password', role: 'supervisor', name: 'Network Sup E1', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+        { id: 130, username: 'supervisor5b', password: 'password', role: 'supervisor', name: 'Network Sup E2', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+
+        // Max Hospital
+        { id: 131, username: 'doctor6', password: 'password', role: 'doctor', name: 'Dr. Sunita Patel', hospital: 'Max Hospital', location: 'Saket, Delhi' },
+        { id: 132, username: 'doctor6b', password: 'password', role: 'doctor', name: 'Dr. Amit Trivedi', hospital: 'Max Hospital', location: 'Saket, Delhi' },
+        { id: 133, username: 'admin6', password: 'password', role: 'admin', name: 'Admit Coord F', hospital: 'Max Hospital', location: 'Saket, Delhi' },
+        { id: 134, username: 'admin6b', password: 'password', role: 'admin', name: 'Admit Coord F2', hospital: 'Max Hospital', location: 'Saket, Delhi' },
+        { id: 135, username: 'supervisor6', password: 'password', role: 'supervisor', name: 'Network Sup F1', hospital: 'Max Hospital', location: 'Saket, Delhi' },
+        { id: 136, username: 'supervisor6b', password: 'password', role: 'supervisor', name: 'Network Sup F2', hospital: 'Max Hospital', location: 'Saket, Delhi' }
       ];
     }
-    if (!data.organs) data.organs = [];
+    if (!data.organs || data.organs.length === 0) {
+      data.organs = [
+        { id: 1, organ_type: 'Kidney', blood_group: 'O+', status: 'Available', hospital: 'Care Hospital', received_at: new Date().toISOString() },
+        { id: 2, organ_type: 'Liver', blood_group: 'A+', status: 'Available', hospital: 'Care Hospital', received_at: new Date().toISOString() },
+        { id: 3, organ_type: 'Heart', blood_group: 'B+', status: 'Available', hospital: 'Apollo Hospital', received_at: new Date().toISOString() },
+        { id: 4, organ_type: 'Kidney', blood_group: 'AB+', status: 'Available', hospital: 'Apollo Hospital', received_at: new Date().toISOString() },
+        { id: 5, organ_type: 'Liver', blood_group: 'O-', status: 'Available', hospital: 'Yashoda Hospital', received_at: new Date().toISOString() }
+      ];
+    }
     if (!data.donations) data.donations = [];
     if (!data.transplant_activities) data.transplant_activities = [];
     if (!data.transfers) data.transfers = [];
@@ -53,11 +106,61 @@ async function load() {
         requests: [],
         fundraisings: [],
         users: [
+          // Care Hospital
           { id: 101, username: 'doctor1', password: 'password', role: 'doctor', name: 'Dr. Sai Teja', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
           { id: 102, username: 'admin1', password: 'password', role: 'admin', name: 'Admit Coord A', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
-          { id: 103, username: 'supervisor1', password: 'password', role: 'supervisor', name: 'Network Sup B', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' }
+          { id: 103, username: 'supervisor1', password: 'password', role: 'supervisor', name: 'Network Sup A1', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
+          { id: 107, username: 'doctor1b', password: 'password', role: 'doctor', name: 'Dr. Aarav Sharma', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
+          { id: 108, username: 'admin1b', password: 'password', role: 'admin', name: 'Admit Coord A2', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
+          { id: 109, username: 'supervisor1b', password: 'password', role: 'supervisor', name: 'Network Sup A2', hospital: 'Care Hospital', location: 'Miyapur, Hyderabad' },
+
+          // Apollo Hospital
+          { id: 104, username: 'doctor2', password: 'password', role: 'doctor', name: 'Dr. Priya Reddy', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+          { id: 105, username: 'admin2', password: 'password', role: 'admin', name: 'Admit Coord B', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+          { id: 106, username: 'supervisor2', password: 'password', role: 'supervisor', name: 'Network Sup B1', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+          { id: 110, username: 'doctor2b', password: 'password', role: 'doctor', name: 'Dr. Rakesh Sen', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+          { id: 111, username: 'admin2b', password: 'password', role: 'admin', name: 'Admit Coord B2', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+          { id: 112, username: 'supervisor2b', password: 'password', role: 'supervisor', name: 'Network Sup B2', hospital: 'Apollo Hospital', location: 'Banjara Hills, Hyderabad' },
+
+          // Yashoda Hospital
+          { id: 113, username: 'doctor3', password: 'password', role: 'doctor', name: 'Dr. Vikram Seth', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+          { id: 114, username: 'doctor3b', password: 'password', role: 'doctor', name: 'Dr. Nisha Goel', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+          { id: 115, username: 'admin3', password: 'password', role: 'admin', name: 'Admit Coord C', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+          { id: 116, username: 'admin3b', password: 'password', role: 'admin', name: 'Admit Coord C2', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+          { id: 117, username: 'supervisor3', password: 'password', role: 'supervisor', name: 'Network Sup C1', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+          { id: 118, username: 'supervisor3b', password: 'password', role: 'supervisor', name: 'Network Sup C2', hospital: 'Yashoda Hospital', location: 'Secunderabad, Hyderabad' },
+
+          // AIG Hospitals
+          { id: 119, username: 'doctor4', password: 'password', role: 'doctor', name: 'Dr. Mahesh Babu', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+          { id: 120, username: 'doctor4b', password: 'password', role: 'doctor', name: 'Dr. Kavya Krishnan', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+          { id: 121, username: 'admin4', password: 'password', role: 'admin', name: 'Admit Coord D', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+          { id: 122, username: 'admin4b', password: 'password', role: 'admin', name: 'Admit Coord D2', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+          { id: 123, username: 'supervisor4', password: 'password', role: 'supervisor', name: 'Network Sup D1', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+          { id: 124, username: 'supervisor4b', password: 'password', role: 'supervisor', name: 'Network Sup D2', hospital: 'AIG Hospitals', location: 'Gachibowli, Hyderabad' },
+
+          // Fortis Hospital
+          { id: 125, username: 'doctor5', password: 'password', role: 'doctor', name: 'Dr. Sameer Khan', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+          { id: 126, username: 'doctor5b', password: 'password', role: 'doctor', name: 'Dr. Ananya Roy', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+          { id: 127, username: 'admin5', password: 'password', role: 'admin', name: 'Admit Coord E', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+          { id: 128, username: 'admin5b', password: 'password', role: 'admin', name: 'Admit Coord E2', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+          { id: 129, username: 'supervisor5', password: 'password', role: 'supervisor', name: 'Network Sup E1', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+          { id: 130, username: 'supervisor5b', password: 'password', role: 'supervisor', name: 'Network Sup E2', hospital: 'Fortis Hospital', location: 'Shalimar Bagh, Delhi' },
+
+          // Max Hospital
+          { id: 131, username: 'doctor6', password: 'password', role: 'doctor', name: 'Dr. Sunita Patel', hospital: 'Max Hospital', location: 'Saket, Delhi' },
+          { id: 132, username: 'doctor6b', password: 'password', role: 'doctor', name: 'Dr. Amit Trivedi', hospital: 'Max Hospital', location: 'Saket, Delhi' },
+          { id: 133, username: 'admin6', password: 'password', role: 'admin', name: 'Admit Coord F', hospital: 'Max Hospital', location: 'Saket, Delhi' },
+          { id: 134, username: 'admin6b', password: 'password', role: 'admin', name: 'Admit Coord F2', hospital: 'Max Hospital', location: 'Saket, Delhi' },
+          { id: 135, username: 'supervisor6', password: 'password', role: 'supervisor', name: 'Network Sup F1', hospital: 'Max Hospital', location: 'Saket, Delhi' },
+          { id: 136, username: 'supervisor6b', password: 'password', role: 'supervisor', name: 'Network Sup F2', hospital: 'Max Hospital', location: 'Saket, Delhi' }
         ],
-        organs: [],
+        organs: [
+          { id: 1, organ_type: 'Kidney', blood_group: 'O+', status: 'Available', hospital: 'Care Hospital', received_at: new Date().toISOString() },
+          { id: 2, organ_type: 'Liver', blood_group: 'A+', status: 'Available', hospital: 'Care Hospital', received_at: new Date().toISOString() },
+          { id: 3, organ_type: 'Heart', blood_group: 'B+', status: 'Available', hospital: 'Apollo Hospital', received_at: new Date().toISOString() },
+          { id: 4, organ_type: 'Kidney', blood_group: 'AB+', status: 'Available', hospital: 'Apollo Hospital', received_at: new Date().toISOString() },
+          { id: 5, organ_type: 'Liver', blood_group: 'O-', status: 'Available', hospital: 'Yashoda Hospital', received_at: new Date().toISOString() }
+        ],
         donations: [],
         transplant_activities: [],
         transfers: []
@@ -229,17 +332,26 @@ async function queryRequests(opts = {}) {
 }
 
 async function addRequest(item) {
+  const { organ, urgency, blood, location, hospital, patient_name, patient_age, patient_report } = item;
   if (usePostgres) {
-    const { organ, urgency, blood, location, hospital } = item;
     const res = await pool.query(
-      `INSERT INTO requests (organ, urgency, blood, location, hospital, status, time) VALUES ($1, $2, $3, $4, $5, 'Pending', 'Just Now') RETURNING *`,
-      [organ, urgency, blood, location, hospital]
+      `INSERT INTO requests (organ, urgency, blood, location, hospital, patient_name, patient_age, patient_report, status, time)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'Pending', 'Just Now') RETURNING *`,
+      [organ, urgency, blood, location, hospital, patient_name || null, patient_age || null, patient_report || null]
     );
     return res.rows[0];
   } else {
     const data = await load();
     const id = data.requests.length ? Math.max(...data.requests.map((r) => r.id)) + 1 : 1;
-    const toAdd = { id, status: 'Pending', time: 'Just Now', ...item };
+    const toAdd = {
+      id,
+      status: 'Pending',
+      time: 'Just Now',
+      patient_name: patient_name || null,
+      patient_age: patient_age || null,
+      patient_report: patient_report || null,
+      ...item
+    };
     data.requests.push(toAdd);
     await save(data);
     return toAdd;
@@ -338,22 +450,18 @@ async function updateOrganStatus(id, status) {
 // ALLOCATIONS & VERIFICATIONS
 // ----------------------------------------------------
 async function allocateDoctorAndOrgan(requestId, doctorId, organId, verificationCode) {
+  const code = verificationCode || generateVerificationCode();
   if (usePostgres) {
-    // Begin Transaction
     const client = await pool.connect();
     try {
       await client.query('BEGIN');
-      // Update request status, doctor, organ, verification code
       const reqRes = await client.query(
         `UPDATE requests 
          SET status = 'Allocated', allocated_doctor_id = $2, allocated_organ_id = $3, verification_code = $4, verification_confirmed = FALSE 
          WHERE id = $1 RETURNING *`,
-        [requestId, doctorId, organId, verificationCode]
+        [requestId, doctorId, organId, code]
       );
-      if (reqRes.rows.length === 0) {
-        throw new Error('Request not found');
-      }
-      // Update organ status
+      if (reqRes.rows.length === 0) throw new Error('Request not found');
       await client.query(`UPDATE organs SET status = 'Sent to OR' WHERE id = $1`, [organId]);
       await client.query('COMMIT');
       return reqRes.rows[0];
@@ -376,7 +484,7 @@ async function allocateDoctorAndOrgan(requestId, doctorId, organId, verification
       status: 'Allocated',
       allocated_doctor_id: doctorId,
       allocated_organ_id: organId,
-      verification_code: verificationCode,
+      verification_code: code,
       verification_confirmed: false
     };
 
@@ -386,7 +494,7 @@ async function allocateDoctorAndOrgan(requestId, doctorId, organId, verification
   }
 }
 
-async function confirmTransplant(requestId, doctorId, verificationCode) {
+async function authorizeSurgery(requestId, doctorId, verificationCode) {
   if (usePostgres) {
     const client = await pool.connect();
     try {
@@ -395,24 +503,22 @@ async function confirmTransplant(requestId, doctorId, verificationCode) {
       const request = reqRes.rows[0];
 
       if (!request) throw new Error('Request not found');
-      if (request.status !== 'Allocated') throw new Error('Request not allocated yet');
-      if (request.verification_code !== verificationCode) throw new Error('Invalid verification code');
+      if (request.status !== 'Allocated') throw new Error('Request must be allocated before authorization');
+      if (Number(request.allocated_doctor_id) !== Number(doctorId)) throw new Error('This operation is not assigned to you');
+      if (request.verification_code !== verificationCode) throw new Error('Invalid Surgical Verification Code');
 
-      // Update request to Completed
       const updatedReqRes = await client.query(
-        `UPDATE requests SET status = 'Completed', verification_confirmed = TRUE WHERE id = $1 RETURNING *`,
+        `UPDATE requests SET status = 'Authorized', verification_confirmed = TRUE, authorized_at = NOW() WHERE id = $1 RETURNING *`,
         [requestId]
       );
 
-      // Update organ status to transplanted
-      if (request.allocated_organ_id) {
-        await client.query(`UPDATE organs SET status = 'Transplanted' WHERE id = $1`, [request.allocated_organ_id]);
-      }
-
-      // Log activity
       await client.query(
         `INSERT INTO transplant_activities (doctor_id, description, details) VALUES ($1, $2, $3)`,
-        [doctorId, `Completed transplant operation for Request #${requestId}`, `Organ: ${request.organ}, Blood: ${request.blood}`]
+        [
+          doctorId,
+          `Pre-op authorization for Request #${requestId}`,
+          `Patient: ${request.patient_name || 'N/A'} | Organ: ${request.organ} | Blood: ${request.blood} | Verification code validated`
+        ]
       );
 
       await client.query('COMMIT');
@@ -429,29 +535,98 @@ async function confirmTransplant(requestId, doctorId, verificationCode) {
     if (reqIdx === -1) throw new Error('Request not found');
 
     const request = data.requests[reqIdx];
-    if (request.status !== 'Allocated') throw new Error('Request not allocated yet');
-    if (request.verification_code !== verificationCode) throw new Error('Invalid verification code');
+    if (request.status !== 'Allocated') throw new Error('Request must be allocated before authorization');
+    if (Number(request.allocated_doctor_id) !== Number(doctorId)) throw new Error('This operation is not assigned to you');
+    if (request.verification_code !== verificationCode) throw new Error('Invalid Surgical Verification Code');
 
-    data.requests[reqIdx].status = 'Completed';
+    data.requests[reqIdx].status = 'Authorized';
     data.requests[reqIdx].verification_confirmed = true;
-
-    const organIdx = data.organs.findIndex((o) => o.id === request.allocated_organ_id);
-    if (organIdx !== -1) {
-      data.organs[organIdx].status = 'Transplanted';
-    }
+    data.requests[reqIdx].authorized_at = new Date().toISOString();
 
     const activityId = data.transplant_activities.length ? Math.max(...data.transplant_activities.map(a => a.id)) + 1 : 1;
     data.transplant_activities.push({
       id: activityId,
       doctor_id: doctorId,
-      description: `Completed transplant operation for Request #${requestId}`,
-      details: `Organ: ${request.organ}, Blood: ${request.blood}`,
+      description: `Pre-op authorization for Request #${requestId}`,
+      details: `Patient: ${request.patient_name || 'N/A'} | Organ: ${request.organ} | Blood: ${request.blood} | Verification code validated`,
       created_at: new Date().toISOString()
     });
 
     await save(data);
     return data.requests[reqIdx];
   }
+}
+
+async function completeSurgery(requestId, doctorId) {
+  if (usePostgres) {
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      const reqRes = await client.query('SELECT * FROM requests WHERE id = $1', [requestId]);
+      const request = reqRes.rows[0];
+
+      if (!request) throw new Error('Request not found');
+      if (request.status !== 'Authorized') throw new Error('Surgery must be authorized before completion');
+      if (Number(request.allocated_doctor_id) !== Number(doctorId)) throw new Error('This operation is not assigned to you');
+
+      const updatedReqRes = await client.query(
+        `UPDATE requests SET status = 'Completed', completed_at = NOW() WHERE id = $1 RETURNING *`,
+        [requestId]
+      );
+
+      if (request.allocated_organ_id) {
+        await client.query(`UPDATE organs SET status = 'Transplanted' WHERE id = $1`, [request.allocated_organ_id]);
+      }
+
+      await client.query(
+        `INSERT INTO transplant_activities (doctor_id, description, details) VALUES ($1, $2, $3)`,
+        [
+          doctorId,
+          `Completed transplant for Request #${requestId}`,
+          `Patient: ${request.patient_name || 'N/A'} | Organ: ${request.organ} | Blood: ${request.blood} | Outcome: Successful`
+        ]
+      );
+
+      await client.query('COMMIT');
+      return updatedReqRes.rows[0];
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
+  } else {
+    const data = await load();
+    const reqIdx = data.requests.findIndex((r) => r.id === requestId);
+    if (reqIdx === -1) throw new Error('Request not found');
+
+    const request = data.requests[reqIdx];
+    if (request.status !== 'Authorized') throw new Error('Surgery must be authorized before completion');
+    if (Number(request.allocated_doctor_id) !== Number(doctorId)) throw new Error('This operation is not assigned to you');
+
+    data.requests[reqIdx].status = 'Completed';
+    data.requests[reqIdx].completed_at = new Date().toISOString();
+
+    const organIdx = data.organs.findIndex((o) => o.id === request.allocated_organ_id);
+    if (organIdx !== -1) data.organs[organIdx].status = 'Transplanted';
+
+    const activityId = data.transplant_activities.length ? Math.max(...data.transplant_activities.map(a => a.id)) + 1 : 1;
+    data.transplant_activities.push({
+      id: activityId,
+      doctor_id: doctorId,
+      description: `Completed transplant for Request #${requestId}`,
+      details: `Patient: ${request.patient_name || 'N/A'} | Organ: ${request.organ} | Blood: ${request.blood} | Outcome: Successful`,
+      created_at: new Date().toISOString()
+    });
+
+    await save(data);
+    return data.requests[reqIdx];
+  }
+}
+
+async function findMatchingOrgans(request, hospital) {
+  const organs = await getOrgans(hospital || null);
+  return organs.filter((o) => isOrganMatch(o, request));
 }
 
 // ----------------------------------------------------
@@ -653,16 +828,87 @@ async function addTransfer(transfer) {
 
 async function updateTransferStatus(id, status) {
   if (usePostgres) {
-    const res = await pool.query('UPDATE transfers SET status = $2 WHERE id = $1 RETURNING *', [id, status]);
-    return res.rows[0] || null;
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      const transferRes = await client.query('SELECT * FROM transfers WHERE id = $1', [id]);
+      const transfer = transferRes.rows[0];
+      if (!transfer) {
+        await client.query('ROLLBACK');
+        return null;
+      }
+
+      let organId = transfer.organ_id;
+
+      if (status === 'Accepted' && !organId) {
+        const organRes = await client.query(
+          `SELECT * FROM organs WHERE hospital = $1 AND organ_type = $2 AND blood_group = $3 AND status = 'Available' LIMIT 1`,
+          [transfer.from_hospital, transfer.organ_type, transfer.blood_group]
+        );
+        if (organRes.rows.length === 0) throw new Error('No matching organ available at source hospital');
+        organId = organRes.rows[0].id;
+        await client.query(`UPDATE organs SET status = 'In Transit' WHERE id = $1`, [organId]);
+        status = 'In Transit';
+      }
+
+      if (status === 'Completed' && organId) {
+        await client.query(
+          `UPDATE organs SET hospital = $2, status = 'Available' WHERE id = $1`,
+          [organId, transfer.to_hospital]
+        );
+      }
+
+      const res = await client.query(
+        'UPDATE transfers SET status = $2, organ_id = COALESCE($3, organ_id) WHERE id = $1 RETURNING *',
+        [id, status, organId]
+      );
+      await client.query('COMMIT');
+      return res.rows[0] || null;
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
   } else {
     const data = await load();
     const idx = data.transfers.findIndex((t) => t.id === id);
     if (idx === -1) return null;
-    data.transfers[idx].status = status;
+
+    const transfer = data.transfers[idx];
+    let newStatus = status;
+    let organId = transfer.organ_id;
+
+    if (status === 'Accepted' && !organId) {
+      const organIdx = data.organs.findIndex(
+        (o) =>
+          o.hospital === transfer.from_hospital &&
+          o.organ_type.toLowerCase() === transfer.organ_type.toLowerCase() &&
+          o.blood_group.toLowerCase() === transfer.blood_group.toLowerCase() &&
+          o.status === 'Available'
+      );
+      if (organIdx === -1) throw new Error('No matching organ available at source hospital');
+      organId = data.organs[organIdx].id;
+      data.organs[organIdx].status = 'In Transit';
+      newStatus = 'In Transit';
+    }
+
+    if (status === 'Completed' && organId) {
+      const organIdx = data.organs.findIndex((o) => o.id === organId);
+      if (organIdx !== -1) {
+        data.organs[organIdx].hospital = transfer.to_hospital;
+        data.organs[organIdx].status = 'Available';
+      }
+    }
+
+    data.transfers[idx] = { ...transfer, status: newStatus, organ_id: organId || transfer.organ_id };
     await save(data);
     return data.transfers[idx];
   }
+}
+
+function getHospitals() {
+  return NETWORK_HOSPITALS;
 }
 
 module.exports = {
@@ -680,7 +926,9 @@ module.exports = {
   getUserById,
   createUser,
   allocateDoctorAndOrgan,
-  confirmTransplant,
+  authorizeSurgery,
+  completeSurgery,
+  findMatchingOrgans,
   getActivities,
   addActivity,
   getFundraisings,
@@ -689,5 +937,7 @@ module.exports = {
   getTransfers,
   addTransfer,
   updateTransferStatus,
-  getDoctors
+  getDoctors,
+  getHospitals,
+  generateVerificationCode
 };

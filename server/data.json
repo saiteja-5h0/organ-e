@@ -4,10 +4,14 @@
       "id": 1,
       "organ": "Kidney",
       "urgency": "Critical",
-      "blood": "O+",
+      "blood": "B+",
       "location": "Miyapur, Hyderabad",
       "hospital": "Care Hospital",
-      "time": "2 hours ago"
+      "time": "2 hours ago",
+      "status": "Pending",
+      "patient_name": "Ramesh Kumar",
+      "patient_age": 45,
+      "patient_report": "End-stage renal disease. Creatinine 8.2 mg/dL. On dialysis 3x/week. Blood type B+. No prior transplants. HLA typing pending. Requires compatible Kidney B+."
     },
     {
       "id": 2,
@@ -16,16 +20,427 @@
       "blood": "A-",
       "location": "Banjara Hills, Hyderabad",
       "hospital": "Apollo Hospital",
-      "time": "5 hours ago"
+      "time": "5 hours ago",
+      "status": "Pending",
+      "patient_name": "Lakshmi Devi",
+      "patient_age": 52,
+      "patient_report": "Acute liver failure due to hepatitis B. MELD score 28. Requires urgent transplant within 72 hours. Blood type A-."
     },
     {
       "id": 3,
-      "organ": "Kidney",
-      "urgency": "Moderate",
-      "blood": "B+",
+      "organ": "Heart",
+      "urgency": "Critical",
+      "blood": "O+",
       "location": "Secunderabad",
       "hospital": "Yashoda Hospital",
-      "time": "1 day ago"
+      "time": "1 day ago",
+      "status": "Pending",
+      "patient_name": "Venkat Reddy",
+      "patient_age": 38,
+      "patient_report": "Dilation cardiomyopathy. Heart failure NYHA Class IV. Requires compatible Heart O+."
+    },
+    {
+      "id": 4,
+      "status": "Completed",
+      "time": "Just now",
+      "patient_name": "Venkat R",
+      "patient_age": 42,
+      "patient_report": "Severe heart failure. Needs immediate transplant.",
+      "organ": "Heart",
+      "urgency": "Critical",
+      "blood": "O+",
+      "location": "Delhi",
+      "hospital": "Fortis Hospital",
+      "allocated_doctor_id": 125,
+      "allocated_organ_id": 7,
+      "verification_code": "ORE-838487",
+      "verification_confirmed": true,
+      "authorized_at": "2026-07-09T15:19:13.974Z",
+      "completed_at": "2026-07-09T15:19:50.297Z"
+    }
+  ],
+  "organs": [
+    {
+      "id": 1,
+      "organ_type": "Kidney",
+      "blood_group": "O+",
+      "status": "Available",
+      "hospital": "Care Hospital",
+      "received_at": "2026-07-09T12:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "organ_type": "Liver",
+      "blood_group": "A+",
+      "status": "Available",
+      "hospital": "Care Hospital",
+      "received_at": "2026-07-09T12:05:00.000Z"
+    },
+    {
+      "id": 3,
+      "organ_type": "Heart",
+      "blood_group": "B+",
+      "status": "Available",
+      "hospital": "Apollo Hospital",
+      "received_at": "2026-07-09T12:10:00.000Z"
+    },
+    {
+      "id": 4,
+      "organ_type": "Kidney",
+      "blood_group": "AB+",
+      "status": "Available",
+      "hospital": "Apollo Hospital",
+      "received_at": "2026-07-09T12:15:00.000Z"
+    },
+    {
+      "id": 5,
+      "organ_type": "Liver",
+      "blood_group": "O-",
+      "status": "Available",
+      "hospital": "Yashoda Hospital",
+      "received_at": "2026-07-09T12:20:00.000Z"
+    },
+    {
+      "id": 6,
+      "organ_type": "Kidney",
+      "blood_group": "B+",
+      "status": "Available",
+      "hospital": "Fortis Hospital",
+      "received_at": "2026-07-09T12:25:00.000Z"
+    },
+    {
+      "id": 7,
+      "organ_type": "Heart",
+      "blood_group": "O+",
+      "status": "Transplanted",
+      "hospital": "Fortis Hospital",
+      "received_at": "2026-07-09T12:30:00.000Z"
+    }
+  ],
+  "users": [
+    {
+      "id": 101,
+      "username": "doctor1",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Sai Teja",
+      "hospital": "Care Hospital",
+      "location": "Miyapur, Hyderabad"
+    },
+    {
+      "id": 102,
+      "username": "admin1",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord A",
+      "hospital": "Care Hospital",
+      "location": "Miyapur, Hyderabad"
+    },
+    {
+      "id": 103,
+      "username": "supervisor1",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup A1",
+      "hospital": "Care Hospital",
+      "location": "Miyapur, Hyderabad"
+    },
+    {
+      "id": 107,
+      "username": "doctor1b",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Aarav Sharma",
+      "hospital": "Care Hospital",
+      "location": "Miyapur, Hyderabad"
+    },
+    {
+      "id": 108,
+      "username": "admin1b",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord A2",
+      "hospital": "Care Hospital",
+      "location": "Miyapur, Hyderabad"
+    },
+    {
+      "id": 109,
+      "username": "supervisor1b",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup A2",
+      "hospital": "Care Hospital",
+      "location": "Miyapur, Hyderabad"
+    },
+    {
+      "id": 104,
+      "username": "doctor2",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Priya Reddy",
+      "hospital": "Apollo Hospital",
+      "location": "Banjara Hills, Hyderabad"
+    },
+    {
+      "id": 105,
+      "username": "admin2",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord B",
+      "hospital": "Apollo Hospital",
+      "location": "Banjara Hills, Hyderabad"
+    },
+    {
+      "id": 106,
+      "username": "supervisor2",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup B1",
+      "hospital": "Apollo Hospital",
+      "location": "Banjara Hills, Hyderabad"
+    },
+    {
+      "id": 110,
+      "username": "doctor2b",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Rakesh Sen",
+      "hospital": "Apollo Hospital",
+      "location": "Banjara Hills, Hyderabad"
+    },
+    {
+      "id": 111,
+      "username": "admin2b",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord B2",
+      "hospital": "Apollo Hospital",
+      "location": "Banjara Hills, Hyderabad"
+    },
+    {
+      "id": 112,
+      "username": "supervisor2b",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup B2",
+      "hospital": "Apollo Hospital",
+      "location": "Banjara Hills, Hyderabad"
+    },
+    {
+      "id": 113,
+      "username": "doctor3",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Vikram Seth",
+      "hospital": "Yashoda Hospital",
+      "location": "Secunderabad, Hyderabad"
+    },
+    {
+      "id": 114,
+      "username": "doctor3b",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Nisha Goel",
+      "hospital": "Yashoda Hospital",
+      "location": "Secunderabad, Hyderabad"
+    },
+    {
+      "id": 115,
+      "username": "admin3",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord C",
+      "hospital": "Yashoda Hospital",
+      "location": "Secunderabad, Hyderabad"
+    },
+    {
+      "id": 116,
+      "username": "admin3b",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord C2",
+      "hospital": "Yashoda Hospital",
+      "location": "Secunderabad, Hyderabad"
+    },
+    {
+      "id": 117,
+      "username": "supervisor3",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup C1",
+      "hospital": "Yashoda Hospital",
+      "location": "Secunderabad, Hyderabad"
+    },
+    {
+      "id": 118,
+      "username": "supervisor3b",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup C2",
+      "hospital": "Yashoda Hospital",
+      "location": "Secunderabad, Hyderabad"
+    },
+    {
+      "id": 119,
+      "username": "doctor4",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Mahesh Babu",
+      "hospital": "AIG Hospitals",
+      "location": "Gachibowli, Hyderabad"
+    },
+    {
+      "id": 120,
+      "username": "doctor4b",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Kavya Krishnan",
+      "hospital": "AIG Hospitals",
+      "location": "Gachibowli, Hyderabad"
+    },
+    {
+      "id": 121,
+      "username": "admin4",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord D",
+      "hospital": "AIG Hospitals",
+      "location": "Gachibowli, Hyderabad"
+    },
+    {
+      "id": 122,
+      "username": "admin4b",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord D2",
+      "hospital": "AIG Hospitals",
+      "location": "Gachibowli, Hyderabad"
+    },
+    {
+      "id": 123,
+      "username": "supervisor4",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup D1",
+      "hospital": "AIG Hospitals",
+      "location": "Gachibowli, Hyderabad"
+    },
+    {
+      "id": 124,
+      "username": "supervisor4b",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup D2",
+      "hospital": "AIG Hospitals",
+      "location": "Gachibowli, Hyderabad"
+    },
+    {
+      "id": 125,
+      "username": "doctor5",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Sameer Khan",
+      "hospital": "Fortis Hospital",
+      "location": "Shalimar Bagh, Delhi"
+    },
+    {
+      "id": 126,
+      "username": "doctor5b",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Ananya Roy",
+      "hospital": "Fortis Hospital",
+      "location": "Shalimar Bagh, Delhi"
+    },
+    {
+      "id": 127,
+      "username": "admin5",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord E",
+      "hospital": "Fortis Hospital",
+      "location": "Shalimar Bagh, Delhi"
+    },
+    {
+      "id": 128,
+      "username": "admin5b",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord E2",
+      "hospital": "Fortis Hospital",
+      "location": "Shalimar Bagh, Delhi"
+    },
+    {
+      "id": 129,
+      "username": "supervisor5",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup E1",
+      "hospital": "Fortis Hospital",
+      "location": "Shalimar Bagh, Delhi"
+    },
+    {
+      "id": 130,
+      "username": "supervisor5b",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup E2",
+      "hospital": "Fortis Hospital",
+      "location": "Shalimar Bagh, Delhi"
+    },
+    {
+      "id": 131,
+      "username": "doctor6",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Sunita Patel",
+      "hospital": "Max Hospital",
+      "location": "Saket, Delhi"
+    },
+    {
+      "id": 132,
+      "username": "doctor6b",
+      "password": "password",
+      "role": "doctor",
+      "name": "Dr. Amit Trivedi",
+      "hospital": "Max Hospital",
+      "location": "Saket, Delhi"
+    },
+    {
+      "id": 133,
+      "username": "admin6",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord F",
+      "hospital": "Max Hospital",
+      "location": "Saket, Delhi"
+    },
+    {
+      "id": 134,
+      "username": "admin6b",
+      "password": "password",
+      "role": "admin",
+      "name": "Admit Coord F2",
+      "hospital": "Max Hospital",
+      "location": "Saket, Delhi"
+    },
+    {
+      "id": 135,
+      "username": "supervisor6",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup F1",
+      "hospital": "Max Hospital",
+      "location": "Saket, Delhi"
+    },
+    {
+      "id": 136,
+      "username": "supervisor6b",
+      "password": "password",
+      "role": "supervisor",
+      "name": "Network Sup F2",
+      "hospital": "Max Hospital",
+      "location": "Saket, Delhi"
     }
   ],
   "fundraisings": [
@@ -48,6 +463,44 @@
       "daysLeft": 25,
       "image": "https://images.unsplash.com/photo-1584515839997-64dfa428e97a?auto=format&fit=crop&q=80&w=800",
       "description": "6-month-old Sia requires open heart surgery."
+    }
+  ],
+  "donations": [],
+  "transplant_activities": [
+    {
+      "id": 1,
+      "doctor_id": 125,
+      "description": "Pre-op authorization for Request #4",
+      "details": "Patient: Venkat R | Organ: Heart | Blood: O+ | Verification code validated",
+      "created_at": "2026-07-09T15:19:13.974Z"
+    },
+    {
+      "id": 2,
+      "doctor_id": 125,
+      "description": "Completed transplant for Request #4",
+      "details": "Patient: Venkat R | Organ: Heart | Blood: O+ | Outcome: Successful",
+      "created_at": "2026-07-09T15:19:50.297Z"
+    }
+  ],
+  "transfers": [
+    {
+      "id": 1,
+      "status": "Completed",
+      "created_at": "2026-07-09T15:12:15.906Z",
+      "organ_type": "Heart",
+      "blood_group": "O+",
+      "from_hospital": "Max Hospital",
+      "to_hospital": "Fortis Hospital",
+      "organ_id": 7
+    },
+    {
+      "id": 2,
+      "status": "Requested",
+      "created_at": "2026-07-09T15:13:20.572Z",
+      "organ_type": "Heart",
+      "blood_group": "O+",
+      "from_hospital": "Max Hospital",
+      "to_hospital": "Fortis Hospital"
     }
   ]
 }

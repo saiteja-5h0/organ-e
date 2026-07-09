@@ -172,16 +172,15 @@ app.post('/api/organs', async (req, res) => {
 // ALLOCATIONS & VERIFICATIONS ENDPOINTS
 // ----------------------------------------------------
 app.post('/api/admit/allocate', async (req, res) => {
-  const { requestId, doctorId, organId, verificationCode } = req.body;
-  if (!requestId || !doctorId || !organId || !verificationCode) {
-    return res.status(400).json({ error: 'requestId, doctorId, organId, and verificationCode are required' });
+  const { requestId, doctorId, organId } = req.body;
+  if (!requestId || !doctorId || !organId) {
+    return res.status(400).json({ error: 'requestId, doctorId, and organId are required' });
   }
   try {
     const updatedRequest = await store.allocateDoctorAndOrgan(
       Number(requestId),
       Number(doctorId),
-      Number(organId),
-      verificationCode
+      Number(organId)
     );
     res.json(updatedRequest);
   } catch (err) {
@@ -189,13 +188,44 @@ app.post('/api/admit/allocate', async (req, res) => {
   }
 });
 
+app.post('/api/doctor/authorize', async (req, res) => {
+  const { requestId, doctorId, verificationCode } = req.body;
+  if (!requestId || !doctorId || !verificationCode) {
+    return res.status(400).json({ error: 'requestId, doctorId, and verificationCode are required' });
+  }
+  try {
+    const updatedRequest = await store.authorizeSurgery(
+      Number(requestId),
+      Number(doctorId),
+      verificationCode
+    );
+    res.json(updatedRequest);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/doctor/complete', async (req, res) => {
+  const { requestId, doctorId } = req.body;
+  if (!requestId || !doctorId) {
+    return res.status(400).json({ error: 'requestId and doctorId are required' });
+  }
+  try {
+    const updatedRequest = await store.completeSurgery(Number(requestId), Number(doctorId));
+    res.json(updatedRequest);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// Legacy endpoint — redirects to authorize flow
 app.post('/api/doctor/confirm', async (req, res) => {
   const { requestId, doctorId, verificationCode } = req.body;
   if (!requestId || !doctorId || !verificationCode) {
     return res.status(400).json({ error: 'requestId, doctorId, and verificationCode are required' });
   }
   try {
-    const updatedRequest = await store.confirmTransplant(
+    const updatedRequest = await store.authorizeSurgery(
       Number(requestId),
       Number(doctorId),
       verificationCode
@@ -211,6 +241,27 @@ app.get('/api/doctor/activities', async (req, res) => {
   try {
     const list = await store.getActivities(doctorId ? Number(doctorId) : null);
     res.json(list);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/hospitals', async (req, res) => {
+  try {
+    res.json(store.getHospitals());
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/compatibility', async (req, res) => {
+  const { organ, blood, hospital } = req.query;
+  if (!organ || !blood) {
+    return res.status(400).json({ error: 'organ and blood are required' });
+  }
+  try {
+    const matches = await store.findMatchingOrgans({ organ, blood }, hospital || null);
+    res.json({ matches, count: matches.length });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -91,7 +91,9 @@ function Login({ onLoginSuccess }) {
                 </form>
 
                 <div style={styles.note}>
-                    ⚠️ <b>Authorized Personnel Only:</b> Usage of this system is logged and monitored under state organ transplantation laws. Password for default accounts is: <code>password</code> (usernames: <code>doctor1</code>, <code>admin1</code>, <code>supervisor1</code>).
+                    ⚠️ <b>Authorized Personnel Only:</b> Demo accounts (password: <code>password</code>):
+                    <br />Care Hospital — <code>doctor1</code>, <code>admin1</code>, <code>supervisor1</code>
+                    <br />Apollo Hospital — <code>doctor2</code>, <code>admin2</code>, <code>supervisor2</code>
                 </div>
             </div>
         </div>
