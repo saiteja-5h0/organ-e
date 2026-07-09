@@ -21,10 +21,6 @@ function AdminDashboard({ user }) {
     const [generatedCode, setGeneratedCode] = useState("");
     const [allocating, setAllocating] = useState(false);
 
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
-
     const fetchData = useCallback(async () => {
         setLoading(true);
         try {
@@ -76,7 +72,7 @@ function AdminDashboard({ user }) {
         } finally {
             setOrganSubmitting(false);
         }
-    }, [user]);
+    }, [user, newOrganType, newBloodGroup]);
 
     const openAllocateModal = useCallback((request) => {
         setSelectedRequest(request);
@@ -98,7 +94,7 @@ function AdminDashboard({ user }) {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    requestId: selectedRequest.id,
+                    requestId: selectedRequest,
                     doctorId: Number(selectedDoctorId),
                     organId: Number(selectedOrganId),
                     verificationCode: generatedCode
@@ -116,7 +112,23 @@ function AdminDashboard({ user }) {
         } finally {
             setAllocating(false);
         }
-    }, [fetchData]);
+    }, [
+  fetchData,
+  generatedCode,
+  selectedDoctorId,
+  selectedOrganId,
+  selectedRequest
+]);
+
+    useEffect(() => {
+        fetchData();
+    }, [
+    fetchData,
+    generatedCode,
+    selectedDoctorId,
+    selectedOrganId,
+    selectedRequest
+]);
 
     // Filter available organs that match the selected request's organ and blood group
     const matchingOrgans = selectedRequest

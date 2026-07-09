@@ -19,10 +19,6 @@ function DoctorDashboard({ user }) {
   // Matching check state
   const [checkedMatches, setCheckedMatches] = useState({}); // reqId: array of matches
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, [fetchDashboardData]);
-
   const fetchDashboardData = useCallback(async () => {
     setLoading(true);
     try {
@@ -33,7 +29,7 @@ function DoctorDashboard({ user }) {
 
       // Filter operations allocated to THIS doctor
       const myAllocations = allReqs.filter(
-        (r) => r.status === "Allocated" && r.allocated_doctor_id === user.id
+        (r) => r.status === "Allocated" && r.allocated_doctor_id === user
       );
       setAllocatedOps(myAllocations);
 
@@ -42,7 +38,7 @@ function DoctorDashboard({ user }) {
       setPendingRequests(generalPendings);
 
       // 2. Fetch local activities for this doctor
-      const actRes = await fetch(`/api/doctor/activities?doctorId=${user.id}`);
+      const actRes = await fetch(`/api/doctor/activities?doctorId=${user}`);
       const actData = await actRes.json();
       setActivities(actData);
 
@@ -53,7 +49,7 @@ function DoctorDashboard({ user }) {
 
       // Calculate Stats
       const completedTransplants = allReqs.filter(
-        (r) => r.status === "Completed" && r.allocated_doctor_id === user.id
+        (r) => r.status === "Completed" && r.allocated_doctor_id === user
       ).length;
 
       setStats({
@@ -79,7 +75,7 @@ function DoctorDashboard({ user }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           requestId,
-          doctorId: user.id,
+          doctorId: user,
           verificationCode: typedCode
         })
       });
@@ -98,7 +94,11 @@ function DoctorDashboard({ user }) {
     } finally {
       setConfirming(false);
     }
-  }, [fetchDashboardData]);
+  }, [
+    fetchDashboardData,
+    typedCode,
+    user
+]);
 
   const runCompatibilityCheck = useCallback((request) => {
     // Find matching organs across the entire national registry
@@ -114,6 +114,10 @@ function DoctorDashboard({ user }) {
       [request.id]: matches
     }));
   }, [organsStock]);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
 
   return (
     <div className="container">
