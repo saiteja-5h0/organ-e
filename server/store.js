@@ -506,15 +506,63 @@ async function addActivity(doctorId, description, details) {
 // ----------------------------------------------------
 async function getFundraisings() {
   if (usePostgres) {
-    const res = await pool.query('SELECT * FROM fundraisings ORDER BY id DESC'); // Or mock items since fundraisings is read-only schema
-    return res.rows.length ? res.rows : [
-      { id: 1, title: "Emergency Liver Transplant for Raju", hospital: "AIG Hospitals", goal: 2500000, raised: 1200000, daysLeft: 15, image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800", description: "Raju needs an urgent liver transplant after sudden failure." },
-      { id: 2, title: "Help Baby Sia's Heart Surgery", hospital: "Rainbow Children's Hospital", goal: 800000, raised: 450000, daysLeft: 25, image: "https://images.unsplash.com/photo-1584515839997-64dfa428e97a?auto=format&fit=crop&q=80&w=800", description: "6-month-old Sia requires open heart surgery." }
+    try {
+      const res = await pool.query(
+        "SELECT * FROM fundraisings ORDER BY id DESC"
+      );
+
+      if (res.rows.length > 0) return res.rows;
+    } catch (err) {
+      console.log("Fundraising table not found, using demo data");
+    }
+
+    return [
+      {
+        id: 1,
+        title: "Emergency Liver Transplant for Raju",
+        hospital: "AIG Hospitals",
+        goal: 2500000,
+        raised: 1200000,
+        daysLeft: 15,
+        description:
+          "Raju needs an urgent liver transplant after sudden liver failure."
+      },
+      {
+        id: 2,
+        title: "Help Baby Sia's Heart Surgery",
+        hospital: "Rainbow Children's Hospital",
+        goal: 800000,
+        raised: 450000,
+        daysLeft: 25,
+        description:
+          "6-month-old Sia requires life-saving heart surgery."
+      }
     ];
-  } else {
-    const data = await load();
-    return data.fundraisings || [];
   }
+
+  const data = await load();
+
+  if (data.fundraisings.length > 0)
+    return data.fundraisings;
+
+  return [
+    {
+      id: 1,
+      title: "Emergency Liver Transplant for Raju",
+      hospital: "AIG Hospitals",
+      goal: 2500000,
+      raised: 1200000,
+      daysLeft: 15
+    },
+    {
+      id: 2,
+      title: "Help Baby Sia's Heart Surgery",
+      hospital: "Rainbow Children's Hospital",
+      goal: 800000,
+      raised: 450000,
+      daysLeft: 25
+    }
+  ];
 }
 
 async function addDonation(campaignId, amount) {
