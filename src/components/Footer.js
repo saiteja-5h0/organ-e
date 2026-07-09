@@ -10,7 +10,7 @@ function Footer() {
           <p className="footer-text">Emergency Organ Coordination System</p>
           <p className="footer-small">
             This is a <b>prototype demonstration</b> built for educational and
-            research purposes only.
+            research purposes only by M SAITEJA.
           </p>
         </div>
 
@@ -38,7 +38,7 @@ function Footer() {
       </div>
 
       <div className="footer-bottom">
-        © 2025 ORGAN-E | Prototype Demo | Built for Learning & Innovation
+        © 2025 ORGAN-E | Prototype Demo | Built for Learning & Innovation | M SAITEJA
       </div>
     </footer>
   );
