@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import DashboardStatCard from "../components/DashboardStatCard";
 import "../styles/glass.css";
 import "../styles/global.css";
@@ -21,9 +21,9 @@ function DoctorDashboard({ user }) {
 
   useEffect(() => {
     fetchDashboardData();
-  }, [user]);
+  }, [fetchDashboardData]);
 
-  async function fetchDashboardData() {
+  const fetchDashboardData = useCallback(async () => {
     setLoading(true);
     try {
       // 1. Fetch requests
@@ -67,9 +67,9 @@ function DoctorDashboard({ user }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [user]);
 
-  async function handleVerifySubmit(e, requestId) {
+  const handleVerifySubmit = useCallback(async (e, requestId) => {
     e.preventDefault();
     if (!typedCode) return;
     setConfirming(true);
@@ -98,9 +98,9 @@ function DoctorDashboard({ user }) {
     } finally {
       setConfirming(false);
     }
-  }
+  }, [fetchDashboardData]);
 
-  function runCompatibilityCheck(request) {
+  const runCompatibilityCheck = useCallback((request) => {
     // Find matching organs across the entire national registry
     const matches = organsStock.filter(
       (o) =>
@@ -113,7 +113,7 @@ function DoctorDashboard({ user }) {
       ...prev,
       [request.id]: matches
     }));
-  }
+  }, [organsStock]);
 
   return (
     <div className="container">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "../styles/glass.css";
 import "../styles/global.css";
 
@@ -23,9 +23,9 @@ function AdminDashboard({ user }) {
 
     useEffect(() => {
         fetchData();
-    }, [user]);
+    }, [fetchData]);
 
-    async function fetchData() {
+    const fetchData = useCallback(async () => {
         setLoading(true);
         try {
             // 1. Fetch organs for this hospital
@@ -51,9 +51,9 @@ function AdminDashboard({ user }) {
         } finally {
             setLoading(false);
         }
-    }
+    }, [user]);
 
-    async function handleAddOrgan(e) {
+    const handleAddOrgan = useCallback(async (e) => {
         e.preventDefault();
         setOrganSubmitting(true);
         try {
@@ -76,17 +76,17 @@ function AdminDashboard({ user }) {
         } finally {
             setOrganSubmitting(false);
         }
-    }
+    }, [user]);
 
-    function openAllocateModal(request) {
+    const openAllocateModal = useCallback((request) => {
         setSelectedRequest(request);
         const code = `ORE-${Math.floor(100000 + Math.random() * 900000)}`;
         setGeneratedCode(code);
         setSelectedOrganId("");
         setSelectedDoctorId("");
-    }
+    }, []);
 
-    async function handleAllocate(e) {
+    const handleAllocate = useCallback(async (e) => {
         e.preventDefault();
         if (!selectedOrganId || !selectedDoctorId) {
             alert("Please select both a matching organ and an allocatee doctor");
@@ -116,7 +116,7 @@ function AdminDashboard({ user }) {
         } finally {
             setAllocating(false);
         }
-    }
+    }, [fetchData]);
 
     // Filter available organs that match the selected request's organ and blood group
     const matchingOrgans = selectedRequest

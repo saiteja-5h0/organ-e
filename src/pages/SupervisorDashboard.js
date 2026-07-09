@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "../styles/glass.css";
 import "../styles/global.css";
 
@@ -15,9 +15,9 @@ function SupervisorDashboard({ user }) {
 
     useEffect(() => {
         fetchTransfersData();
-    }, [user]);
+    }, [fetchTransfersData]);
 
-    async function fetchTransfersData() {
+    const fetchTransfersData = useCallback(async () => {
         setLoading(true);
         try {
             // Fetch all transfers related to supervisor hospital
@@ -34,9 +34,9 @@ function SupervisorDashboard({ user }) {
         } finally {
             setLoading(false);
         }
-    }
+    }, [user]);
 
-    async function handleCreateTransfer(e) {
+    const handleCreateTransfer = useCallback(async (e) => {
         e.preventDefault();
         if (targetHospital === user.hospital) {
             alert("Error: Destination hospital cannot match source hospital.");
@@ -65,9 +65,9 @@ function SupervisorDashboard({ user }) {
         } finally {
             setSubmitting(false);
         }
-    }
+    }, [fetchTransfersData]);
 
-    async function handleUpdateStatus(transferId, newStatus) {
+    const handleUpdateStatus = useCallback(async (transferId, newStatus) => {
         try {
             const res = await fetch(`/api/supervisor/transfers/${transferId}`, {
                 method: "PATCH",
@@ -80,7 +80,7 @@ function SupervisorDashboard({ user }) {
         } catch (err) {
             alert("Error updating transfer: " + err.message);
         }
-    }
+    }, [fetchTransfersData]);
 
     // Filter incoming (requested FROM us) vs outgoing (requested BY us)
     // outgoing: transfers where we are to_hospital (i.e. we requested it to come to our hospital)
